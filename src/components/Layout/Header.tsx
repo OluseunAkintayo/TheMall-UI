@@ -3,6 +3,7 @@ import { Container, Title, Wrapper } from "../styled"
 import styled from "styled-components";
 import { SearchIcon, ShoppingCart, User2Icon } from "lucide-react";
 import React, { ChangeEvent, FormEvent } from "react";
+import SearchModal from "./SearchModal";
 
 const Header = () => {
   const [search, setSearch] = React.useState<string>("");
@@ -11,35 +12,47 @@ const Header = () => {
     setSearch(target.value);
   }
   const submit = (e: FormEvent) => e.preventDefault();
-  
+
+  const [searchModal, setSearchModal] = React.useState<boolean>(true);
+
   return (
-    <HeaderRoot>
-      <Wrapper>
-        <Container>
-          <HeaderContent>
-            <Link to="/">
-              <Title>E-Mall</Title>
-            </Link>
-            <Search>
-              <form onSubmit={submit}>
-                <SearchIcon />
-                <input type="text" placeholder="Search" onChange={handleChange} value={search} />
-                <input type="hidden" />
-              </form>
-            </Search>
-            <UserActions className="user-actions">
-              <div className="cart">
-                <ShoppingCart />
-                <span>12</span>
-              </div>
-              <div>
-                <User2Icon />
-              </div>
-            </UserActions>
-          </HeaderContent>
-        </Container>
-      </Wrapper>
-    </HeaderRoot>
+    <React.Fragment>
+      <HeaderRoot>
+        <Wrapper>
+          <Container>
+            <HeaderContent>
+              <Link to="/">
+                <Title>E-Mall</Title>
+              </Link>
+              <Search>
+                <form onSubmit={submit}>
+                  <SearchIcon />
+                  <input type="text" placeholder="Search" onChange={handleChange} value={search} />
+                  <input type="hidden" />
+                </form>
+              </Search>
+              <UserActions className="user-actions">
+                <button onClick={() => setSearchModal(true)}>
+                  <SearchIcon />
+                </button>
+                <button className="cart">
+                  <ShoppingCart />
+                  <span>12</span>
+                </button>
+                <button>
+                  <User2Icon />
+                </button>
+              </UserActions>
+            </HeaderContent>
+          </Container>
+        </Wrapper>
+      </HeaderRoot>
+      <React.Fragment>
+        {
+          searchModal && <SearchModal open={searchModal} close={() => setSearchModal(false)} />
+        }
+      </React.Fragment>
+    </React.Fragment>
   )
 }
 
@@ -51,6 +64,9 @@ const HeaderRoot = styled.div`
 const HeaderContent = styled.div`
   display: grid;
   grid-template-columns: 200px 1fr 200px;
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr 1fr;
+  }
 `;
 
 const Search = styled.div`
@@ -78,22 +94,43 @@ const Search = styled.div`
       }
     }
   }
+  @media (max-width: 768px) {
+    display: none;
+  }
 `;
 
 const UserActions = styled.div`
   display: flex;
   justify-content: flex-end;
-  gap: 1rem;
+  gap: 0.5rem;
+  button {
+    all: unset;
+    width: 24px;
+    height: 24px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    padding: 0.25rem;
+    transition: ease-in-out 0.3s;
+    &:hover {
+      background-color: #9ca3af;
+      svg {
+        stroke: #ffffff;
+      }
+    }
+  }
   svg {
     cursor: pointer;
+    width: 18px;
+    transition: ease-in-out 0.3s;
   }
   .cart {
     position: relative;
     cursor: pointer;
     span {
       position: absolute;
-      right: -14px;
-      top: -12px;
+      right: -10px;
+      top: -8px;
       background-color: #374151;
       width: 20px;
       height: 20px;

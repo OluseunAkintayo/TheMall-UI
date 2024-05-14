@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const Wrapper = styled.section`
-  padding: 1.5rem 5%;
+  padding: 1.5rem 4%;
 `;
 
 export const Container = styled.div`
